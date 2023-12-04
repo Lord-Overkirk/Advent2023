@@ -1,5 +1,16 @@
 package main
 
+func is_symbol(char string) bool {
+	if char != "." || (char < "0"&& char > "9") {
+		return true
+	}
+	return false
+}
+
+func solution_3a() (res int) {
+
+}
+
 func main() {
 	file, err := os.Open("input.txt")
     if err != nil {
