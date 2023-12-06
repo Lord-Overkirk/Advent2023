@@ -119,6 +119,8 @@ func has_gear_ratio(i int, j int, input [] string) bool {
 
 	start_i := i-1
 	end_i := i+1
+	start_j := j-1
+	end_j := j+1
 
 	if (i-1) < 0 {
 		start_i = i
@@ -127,9 +129,21 @@ func has_gear_ratio(i int, j int, input [] string) bool {
 		end_i = len(input) - 1
 	}
 
+	if end_j > len(input[i]) - 1 {
+		end_j--
+	}
+
 	for cur_i := start_i; cur_i <= end_i; cur_i++ {
-		if is_num(rune(input[cur_i][j-1])) || is_num(rune(input[cur_i][j])) || is_num(rune(input[cur_i][j+1])) {
-			candidate++
+		for cur_j := start_j; cur_j <= end_j; cur_j++ {
+			if is_num(rune(input[cur_i][cur_j])) {
+				candidate++
+				for cur_j+1 < len(input[cur_i]) {
+					if !is_num(rune(input[cur_i][cur_j])) {
+						break
+					}
+					cur_j++
+				}
+			}
 		}
 	}
 	if candidate == 2 {
@@ -157,6 +171,8 @@ func gear_ratio(i int, j int, input [] string) (res int) {
 
 	start_i := i-1
 	end_i := i+1
+	start_j := j-1
+	end_j := j+1
 
 	if (i-1) < 0 {
 		start_i = i
@@ -165,24 +181,29 @@ func gear_ratio(i int, j int, input [] string) (res int) {
 		end_i = len(input) - 1
 	}
 
+	if end_j > len(input[i]) - 1 {
+		end_j--
+	}
+
 	var gears [] int
 	for cur_i := start_i; cur_i <= end_i; cur_i++ {
-		if is_num(rune(input[cur_i][j-1])) {
-			first_j := get_first_digit(input[cur_i], j-1)
-			num := get_number(cur_i, first_j, input)
-			gears = append(gears, num)
-		} else if is_num(rune(input[cur_i][j])) {
-			first_j := get_first_digit(input[cur_i], j)
-			num := get_number(cur_i, first_j, input)
-			gears = append(gears, num)
-		} else if is_num(rune(input[cur_i][j+1])) {
-			first_j := get_first_digit(input[cur_i], j+1)
-			num := get_number(cur_i, first_j, input)
-			gears = append(gears, num)
+		for cur_j := start_j; cur_j <= end_j; cur_j++ {
+			if is_num(rune(input[cur_i][cur_j])) {
+				first_j := get_first_digit(input[cur_i], cur_j)
+				num := get_number(cur_i, first_j, input)
+				gears = append(gears, num)
+				for cur_j+1 < len(input[cur_i]) {
+					if !is_num(rune(input[cur_i][cur_j])) {
+						break
+					}
+					cur_j++
+				}
+			}
 		}
 	}
 
 	if len(gears) != 2 {
+		fmt.Println(gears)
 		log.Fatal("Incorrect gears")
 	}
 	res = gears[0] * gears[1]
